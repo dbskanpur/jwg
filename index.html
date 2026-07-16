@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="hi">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Registration - JSON Based System</title>
+    <title>Student WhatsApp Group Joining System</title>
     <style>
         * {
             margin: 0;
@@ -157,7 +157,7 @@
             font-weight: 500;
         }
 
-        .level-badge {
+        .course-badge {
             display: inline-block;
             padding: 4px 15px;
             border-radius: 20px;
@@ -166,12 +166,12 @@
             margin-left: 10px;
         }
 
-        .level-ug {
+        .course-ug {
             background: #e3f2fd;
             color: #0d47a1;
         }
 
-        .level-pg {
+        .course-pg {
             background: #fce4ec;
             color: #b71c1c;
         }
@@ -243,6 +243,23 @@
         .whatsapp-item a:hover {
             background: #25D366;
             color: white;
+        }
+
+        .whatsapp-item.no-link {
+            border-left-color: #ccc;
+            opacity: 0.7;
+        }
+
+        .whatsapp-item.no-link .group-name {
+            color: #999;
+        }
+
+        .no-link-badge {
+            color: #999;
+            font-size: 12px;
+            background: #f0f0f0;
+            padding: 4px 12px;
+            border-radius: 15px;
         }
 
         .json-box {
@@ -335,8 +352,8 @@
 </head>
 <body>
     <div class="container">
-        <h1>🎓 Student Registration System</h1>
-        <p class="subtitle">UG (BA/BSc/BCom) & PG (MA/MSc/MCom) - Semester 1</p>
+        <h1>🎓 Student WhatsApp Group Joining System</h1>
+        <p class="subtitle">B.A. | B.Sc. | M.A. | M.Sc. - Find your WhatsApp Groups</p>
         
         <div id="loadingMsg" class="loading">
             <div class="spinner"></div>
@@ -346,8 +363,8 @@
         <form id="studentForm" style="display: none;">
             <div class="row">
                 <div class="form-group">
-                    <label>Admission Number <span class="required">*</span></label>
-                    <input type="text" id="admissionNumber" placeholder="e.g., 2024001" required>
+                    <label>Registration ID <span class="required">*</span></label>
+                    <input type="text" id="registrationId" placeholder="e.g., 261100028" required>
                 </div>
                 <div class="form-group">
                     <label>Mobile Number <span class="required">*</span></label>
@@ -392,10 +409,12 @@
                 }
                 const studentsData = await studentsResponse.json();
                 
-                // Convert array to object with admissionNumber as key
-                studentsData.students.forEach(student => {
-                    STUDENT_DB[student.admissionNumber] = student;
-                });
+                // Convert array to object with registrationId as key
+                if (studentsData.students && Array.isArray(studentsData.students)) {
+                    studentsData.students.forEach(student => {
+                        STUDENT_DB[student.registrationId] = student;
+                    });
+                }
 
                 // Load whatsapp-groups.json
                 const groupsResponse = await fetch('whatsapp-groups.json');
@@ -410,6 +429,7 @@
                 
                 console.log('✅ Data loaded successfully!');
                 console.log(`📚 ${Object.keys(STUDENT_DB).length} students loaded`);
+                console.log('📱 WhatsApp Groups:', WHATSAPP_LINKS);
                 
             } catch (error) {
                 document.getElementById('loadingMsg').innerHTML = `
@@ -429,35 +449,41 @@
         // =====================================================
         function getWhatsAppGroups(student) {
             const groups = [];
-            const level = student.level; // 'UG' or 'PG'
-            const classType = student.class; // 'BA', 'BSc', 'BCom', 'MA', 'MSc', 'MCom'
-            const major = student.major;
-            const minor = student.minor;
+            const course = student.course; // B.A., B.Sc., M.A., M.Sc.
+            const major1 = student.major1;
+            const major2 = student.major2;
 
-            // Get groups from JSON structure
-            const levelGroups = WHATSAPP_LINKS.whatsappGroups[level];
-            if (!levelGroups) return groups;
+            // Get groups from JSON structure - using whatsappGroups key
+            const courseGroups = WHATSAPP_LINKS.whatsappGroups ? WHATSAPP_LINKS.whatsappGroups[course] : null;
+            
+            if (!courseGroups) {
+                console.log('No groups found for course:', course);
+                return groups;
+            }
 
-            const classGroups = levelGroups[classType];
-            if (!classGroups) return groups;
+            console.log('Course Groups found:', courseGroups);
 
-            // Add Major Subject Group
-            if (classGroups[major]) {
+            // Add Major 1 Subject Group
+            if (major1) {
+                const link = courseGroups[major1] || '';
                 groups.push({
                     type: 'Major Subject',
-                    subject: major,
-                    level: level,
-                    link: classGroups[major]
+                    subject: major1,
+                    course: course,
+                    link: link,
+                    hasLink: link !== ''
                 });
             }
 
-            // Add Minor Subject Group
-            if (minor && classGroups[minor]) {
+            // Add Major 2 Subject Group (only for B.A. and B.Sc.)
+            if ((course === 'B.A.' || course === 'B.Sc.') && major2 && major2.trim() !== '') {
+                const link = courseGroups[major2] || '';
                 groups.push({
-                    type: 'Minor Subject',
-                    subject: minor,
-                    level: level,
-                    link: classGroups[minor]
+                    type: 'Second Major',
+                    subject: major2,
+                    course: course,
+                    link: link,
+                    hasLink: link !== ''
                 });
             }
 
@@ -470,7 +496,7 @@
         document.getElementById('studentForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
-            const admissionNumber = document.getElementById('admissionNumber').value.trim();
+            const registrationId = document.getElementById('registrationId').value.trim();
             const mobileNumber = document.getElementById('mobileNumber').value.trim();
             
             const errorMsg = document.getElementById('errorMsg');
@@ -483,8 +509,8 @@
             resultBox.classList.remove('show');
 
             // Validation
-            if (!admissionNumber || !mobileNumber) {
-                errorMsg.textContent = '⚠️ Admission Number and Mobile Number are required!';
+            if (!registrationId || !mobileNumber) {
+                errorMsg.textContent = '⚠️ Registration ID and Mobile Number are required!';
                 errorMsg.classList.add('show');
                 return;
             }
@@ -496,16 +522,23 @@
             }
 
             // Check student in database
-            const student = STUDENT_DB[admissionNumber];
+            const student = STUDENT_DB[registrationId];
             
             if (!student) {
-                errorMsg.textContent = '❌ Student not found! Please check the admission number.';
+                errorMsg.textContent = '❌ Student not found! Please check the Registration ID.';
+                errorMsg.classList.add('show');
+                return;
+            }
+
+            // Verify mobile number
+            if (student.contact !== mobileNumber) {
+                errorMsg.textContent = '❌ Mobile number does not match our records! Please check and try again.';
                 errorMsg.classList.add('show');
                 return;
             }
 
             // Success - Show results
-            successMsg.textContent = '✅ Student found! Displaying details...';
+            successMsg.textContent = '✅ Student verified! Displaying details...';
             successMsg.classList.add('show');
 
             // Get WhatsApp groups
@@ -514,27 +547,26 @@
             // Prepare JSON data
             const jsonData = {
                 student: {
-                    admissionNumber: admissionNumber,
+                    registrationId: registrationId,
                     mobileNumber: mobileNumber,
-                    name: student.name,
+                    studentName: student.studentName,
                     fatherName: student.fatherName,
-                    class: student.class,
-                    level: student.level,
-                    majorSubject: student.major,
-                    minorSubject: student.minor,
-                    semester: `${student.semester}st Semester`
+                    course: student.course,
+                    major1: student.major1,
+                    major2: student.major2 || '',
+                    date: student.date
                 },
                 whatsappGroups: groups.map(g => ({
                     type: g.type,
                     subject: g.subject,
-                    level: g.level,
+                    course: g.course,
                     link: g.link
                 })),
                 timestamp: new Date().toISOString()
             };
 
             // Display student details
-            displayStudentDetails(student, admissionNumber, mobileNumber);
+            displayStudentDetails(student, registrationId, mobileNumber);
             
             // Display WhatsApp links
             displayWhatsAppLinks(groups);
@@ -550,21 +582,28 @@
         // =====================================================
         // 🖥️ DISPLAY FUNCTIONS
         // =====================================================
-        function displayStudentDetails(student, admissionNumber, mobileNumber) {
+        function displayStudentDetails(student, registrationId, mobileNumber) {
             const card = document.getElementById('studentCard');
             
-            const levelBadge = student.level === 'UG' ? 
-                '<span class="level-badge level-ug">UG - Undergraduate</span>' : 
-                '<span class="level-badge level-pg">PG - Postgraduate</span>';
+            // Determine if UG or PG
+            const isUG = student.course === 'B.A.' || student.course === 'B.Sc.';
+            const courseBadge = isUG ? 
+                '<span class="course-badge course-ug">UG</span>' : 
+                '<span class="course-badge course-pg">PG</span>';
+
+            // Show major2 only if it exists and course is UG
+            const major2Display = (isUG && student.major2 && student.major2.trim() !== '') 
+                ? student.major2 
+                : 'None';
 
             card.innerHTML = `
                 <h3>
                     👤 Student Details 
-                    ${levelBadge}
+                    ${courseBadge}
                 </h3>
                 <div class="detail-row">
-                    <strong>Admission Number:</strong>
-                    <span>${admissionNumber}</span>
+                    <strong>Registration ID:</strong>
+                    <span>${registrationId}</span>
                 </div>
                 <div class="detail-row">
                     <strong>Mobile Number:</strong>
@@ -572,27 +611,27 @@
                 </div>
                 <div class="detail-row">
                     <strong>Student Name:</strong>
-                    <span>${student.name}</span>
+                    <span>${student.studentName}</span>
                 </div>
                 <div class="detail-row">
                     <strong>Father's Name:</strong>
                     <span>${student.fatherName}</span>
                 </div>
                 <div class="detail-row">
-                    <strong>Class:</strong>
-                    <span>${student.class} (${student.level})</span>
+                    <strong>Course:</strong>
+                    <span>${student.course}</span>
                 </div>
                 <div class="detail-row">
-                    <strong>Major Subject:</strong>
-                    <span>${student.major}</span>
+                    <strong>Major 1:</strong>
+                    <span>${student.major1}</span>
                 </div>
                 <div class="detail-row">
-                    <strong>Minor Subject:</strong>
-                    <span>${student.minor || 'None'}</span>
+                    <strong>Major 2:</strong>
+                    <span>${major2Display}</span>
                 </div>
                 <div class="detail-row">
-                    <strong>Semester:</strong>
-                    <span>${student.semester}st Semester</span>
+                    <strong>Registration Date:</strong>
+                    <span>${student.date}</span>
                 </div>
             `;
         }
@@ -603,42 +642,68 @@
             if (groups.length === 0) {
                 container.innerHTML = `
                     <div style="grid-column: 1/-1; text-align: center; color: #888; padding: 20px;">
-                        No WhatsApp groups available for this student.
+                        <p>No WhatsApp groups available for this student.</p>
+                        <p style="font-size: 12px; margin-top: 5px;">Groups will be added soon.</p>
                     </div>
                 `;
                 return;
             }
 
-            container.innerHTML = groups.map(group => `
-                <div class="whatsapp-item">
-                    <div class="group-info">
-                        <span class="group-name">${group.subject}</span>
-                        <span class="group-type">${group.type} • ${group.level}</span>
-                    </div>
-                    <a href="${group.link}" target="_blank">Join →</a>
-                </div>
-            `).join('');
+            container.innerHTML = groups.map(group => {
+                if (group.hasLink && group.link) {
+                    return `
+                        <div class="whatsapp-item">
+                            <div class="group-info">
+                                <span class="group-name">${group.subject}</span>
+                                <span class="group-type">${group.type} • ${group.course}</span>
+                            </div>
+                            <a href="${group.link}" target="_blank">Join →</a>
+                        </div>
+                    `;
+                } else {
+                    return `
+                        <div class="whatsapp-item no-link">
+                            <div class="group-info">
+                                <span class="group-name">${group.subject}</span>
+                                <span class="group-type">${group.type} • ${group.course}</span>
+                            </div>
+                            <span class="no-link-badge">🔜 Coming Soon</span>
+                        </div>
+                    `;
+                }
+            }).join('');
         }
 
         // =====================================================
-        // 🔄 AUTO-FILL ON ADMISSION NUMBER BLUR
+        // 🔄 AUTO-FILL ON REGISTRATION ID BLUR
         // =====================================================
-        document.getElementById('admissionNumber').addEventListener('blur', function() {
-            const admissionNumber = this.value.trim();
+        document.getElementById('registrationId').addEventListener('blur', function() {
+            const registrationId = this.value.trim();
             const errorMsg = document.getElementById('errorMsg');
             const successMsg = document.getElementById('successMsg');
             
-            if (admissionNumber && STUDENT_DB[admissionNumber]) {
-                const student = STUDENT_DB[admissionNumber];
+            if (registrationId && STUDENT_DB[registrationId]) {
+                const student = STUDENT_DB[registrationId];
                 successMsg.textContent = 
-                    `✅ Student found: ${student.name} (${student.class} - ${student.level})`;
+                    `✅ Student found: ${student.studentName} (${student.course})`;
                 successMsg.classList.add('show');
                 errorMsg.classList.remove('show');
-            } else if (admissionNumber) {
+            } else if (registrationId) {
                 errorMsg.textContent = 
-                    '❌ Student not found with this admission number!';
+                    '❌ Student not found with this Registration ID!';
                 errorMsg.classList.add('show');
                 successMsg.classList.remove('show');
+            }
+        });
+
+        // Auto-fill mobile on registration ID match
+        document.getElementById('registrationId').addEventListener('input', function() {
+            const registrationId = this.value.trim();
+            const mobileInput = document.getElementById('mobileNumber');
+            
+            if (registrationId && STUDENT_DB[registrationId]) {
+                const student = STUDENT_DB[registrationId];
+                mobileInput.value = student.contact || '';
             }
         });
     </script>
