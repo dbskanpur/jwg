@@ -1,46 +1,45 @@
 {
   "whatsappGroups": {
-    "UG": {
-      "BA": {
-        "English": "https://chat.whatsapp.com/UG-BA-English-Group-Link",
-        "Hindi": "https://chat.whatsapp.com/UG-BA-Hindi-Group-Link",
-        "History": "https://chat.whatsapp.com/UG-BA-History-Group-Link",
-        "Sanskrit": "https://chat.whatsapp.com/UG-BA-Sanskrit-Group-Link",
-        "Political Science": "https://chat.whatsapp.com/UG-BA-PoliticalScience-Group-Link",
-        "Economics": "https://chat.whatsapp.com/UG-BA-Economics-Group-Link",
-        "Psychology": "https://chat.whatsapp.com/UG-BA-Psychology-Group-Link"
-      },
-      "BSc": {
-        "Physics": "https://chat.whatsapp.com/UG-BSc-Physics-Group-Link",
-        "Chemistry": "https://chat.whatsapp.com/UG-BSc-Chemistry-Group-Link",
-        "Mathematics": "https://chat.whatsapp.com/UG-BSc-Mathematics-Group-Link",
-        "Biology": "https://chat.whatsapp.com/UG-BSc-Biology-Group-Link",
-        "Statistics": "https://chat.whatsapp.com/UG-BSc-Statistics-Group-Link",
-        "Computer Science": "https://chat.whatsapp.com/UG-BSc-ComputerScience-Group-Link"
-      },
-      "BCom": {
-        "Accountancy": "https://chat.whatsapp.com/UG-BCom-Accountancy-Group-Link",
-        "Business Studies": "https://chat.whatsapp.com/UG-BCom-BusinessStudies-Group-Link",
-        "Economics": "https://chat.whatsapp.com/UG-BCom-Economics-Group-Link"
-      }
+    "B.A.": {
+      "History": "https://chat.whatsapp.com/EmtpS4wkgbq4o3nc6Mlrzo?mode=gi_t",
+      "Geography": "https://chat.whatsapp.com/KmCKcFK4cct2V7r1kl33kX?s=cl&p=a&ilr=0&amv=0",
+      "Education": "https://chat.whatsapp.com/J0kJDpsuQAmAga89OJoUnH?s=cl&p=a&ilr=1",
+      "Political Science": "https://chat.whatsapp.com/HMPdi9pnjItBhYzMf962A3?s=sh&p=i&ilr=4",
+      "English": "",
+      "Hindi": "",
+      "Sanskrit": "",
+      "Economics": "",
+      "Sociology": "",
+      "Physical Education": ""
     },
-    "PG": {
-      "MA": {
-        "English Literature": "https://chat.whatsapp.com/PG-MA-EnglishLiterature-Group-Link",
-        "Hindi Literature": "https://chat.whatsapp.com/PG-MA-HindiLiterature-Group-Link",
-        "Linguistics": "https://chat.whatsapp.com/PG-MA-Linguistics-Group-Link",
-        "Indian Culture": "https://chat.whatsapp.com/PG-MA-IndianCulture-Group-Link"
-      },
-      "MSc": {
-        "Physics": "https://chat.whatsapp.com/PG-MSc-Physics-Group-Link",
-        "Chemistry": "https://chat.whatsapp.com/PG-MSc-Chemistry-Group-Link",
-        "Astrophysics": "https://chat.whatsapp.com/PG-MSc-Astrophysics-Group-Link",
-        "Biochemistry": "https://chat.whatsapp.com/PG-MSc-Biochemistry-Group-Link"
-      },
-      "MCom": {
-        "Finance": "https://chat.whatsapp.com/PG-MCom-Finance-Group-Link",
-        "International Business": "https://chat.whatsapp.com/PG-MCom-InternationalBusiness-Group-Link"
-      }
+    "B.Sc.": {
+      "Zoology": "https://chat.whatsapp.com/CAFdhFJk98b1r0bZ8UFUAG?s=cl&p=a&ilr=0",
+      "Physics": "https://chat.whatsapp.com/BvHVPpPEgVWLcLWT1Rq8CZ?mode=gi_t",
+      "Botany": "",
+      "Chemistry": "",
+      "Mathematics": "",
+      "Microbiology": "",
+      "Electronics": "",
+      "Computer Applications": ""
+    },
+    "M.A.": {
+      "History": "https://chat.whatsapp.com/FHfKBPwRttUFV6xJYW3kKJ?mode=gi_t",
+      "Political Science": "https://chat.whatsapp.com/Dd6h6vthDr6CuacAqKUMxB?s=sh&p=i&ilr=4",
+      "Sanskrit": "https://chat.whatsapp.com/D9q3BshDiu16y3djWiUWCT?s=cl&p=a&ilr=4&amv=3",
+      "English": "",
+      "Hindi": "",
+      "Economics": "",
+      "Sociology": "",
+      "Education": "",
+      "Geography": ""
+    },
+    "M.Sc.": {
+      "Zoology": "https://chat.whatsapp.com/JqIIbWGWJLT8x7haUZ4ajd?s=cl&p=a&ilr=0",
+      "Botany": "https://chat.whatsapp.com/F31U4AdNfhCKwZ2GPEQEUR?s=cl&p=a&ilr=1&amv=1",
+      "Physics": "https://chat.whatsapp.com/FAiQywcmTJaEdqrSfnrgz9?mode=gi_t",
+      "Chemistry": "",
+      "Mathematics": "",
+      "Microbiology": ""
     }
   }
 }
