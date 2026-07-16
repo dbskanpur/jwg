@@ -331,6 +331,21 @@
             100% { transform: rotate(360deg); }
         }
 
+        .student-found-msg {
+            color: #28a745;
+            font-size: 14px;
+            padding: 8px 12px;
+            background: #e8f5e9;
+            border-radius: 8px;
+            border-left: 4px solid #28a745;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .student-found-msg.show {
+            display: block;
+        }
+
         @media (max-width: 768px) {
             .row {
                 grid-template-columns: 1fr;
@@ -365,6 +380,7 @@
                 <div class="form-group">
                     <label>Registration ID <span class="required">*</span></label>
                     <input type="text" id="registrationId" placeholder="e.g., 261100028" required>
+                    <div id="studentFoundMsg" class="student-found-msg"></div>
                 </div>
                 <div class="form-group">
                     <label>Mobile Number <span class="required">*</span></label>
@@ -372,7 +388,7 @@
                 </div>
             </div>
 
-            <button type="submit" class="btn">🔍 Get Details & WhatsApp Links</button>
+            <button type="submit" class="btn">🔍 Verify & Get Details</button>
             
             <div id="errorMsg" class="error-msg"></div>
             <div id="successMsg" class="success-msg"></div>
@@ -429,7 +445,6 @@
                 
                 console.log('✅ Data loaded successfully!');
                 console.log(`📚 ${Object.keys(STUDENT_DB).length} students loaded`);
-                console.log('📱 WhatsApp Groups:', WHATSAPP_LINKS);
                 
             } catch (error) {
                 document.getElementById('loadingMsg').innerHTML = `
@@ -457,11 +472,8 @@
             const courseGroups = WHATSAPP_LINKS.whatsappGroups ? WHATSAPP_LINKS.whatsappGroups[course] : null;
             
             if (!courseGroups) {
-                console.log('No groups found for course:', course);
                 return groups;
             }
-
-            console.log('Course Groups found:', courseGroups);
 
             // Add Major 1 Subject Group
             if (major1) {
@@ -491,6 +503,40 @@
         }
 
         // =====================================================
+        // 🔍 CHECK STUDENT ON REGISTRATION ID BLUR (Only Show Name)
+        // =====================================================
+        document.getElementById('registrationId').addEventListener('blur', function() {
+            const registrationId = this.value.trim();
+            const foundMsg = document.getElementById('studentFoundMsg');
+            const errorMsg = document.getElementById('errorMsg');
+            
+            // Clear previous messages
+            foundMsg.classList.remove('show');
+            errorMsg.classList.remove('show');
+            
+            if (registrationId && STUDENT_DB[registrationId]) {
+                const student = STUDENT_DB[registrationId];
+                foundMsg.textContent = `✅ Student found: ${student.studentName} (${student.course})`;
+                foundMsg.classList.add('show');
+            } else if (registrationId) {
+                foundMsg.textContent = '❌ Student not found with this Registration ID!';
+                foundMsg.style.color = '#dc3545';
+                foundMsg.style.background = '#fde8e8';
+                foundMsg.style.borderLeftColor = '#dc3545';
+                foundMsg.classList.add('show');
+            }
+        });
+
+        // Reset found message style on new input
+        document.getElementById('registrationId').addEventListener('input', function() {
+            const foundMsg = document.getElementById('studentFoundMsg');
+            foundMsg.classList.remove('show');
+            foundMsg.style.color = '#28a745';
+            foundMsg.style.background = '#e8f5e9';
+            foundMsg.style.borderLeftColor = '#28a745';
+        });
+
+        // =====================================================
         // 📝 FORM SUBMISSION HANDLER
         // =====================================================
         document.getElementById('studentForm').addEventListener('submit', function(e) {
@@ -502,19 +548,21 @@
             const errorMsg = document.getElementById('errorMsg');
             const successMsg = document.getElementById('successMsg');
             const resultBox = document.getElementById('resultBox');
+            const foundMsg = document.getElementById('studentFoundMsg');
 
             // Hide previous messages
             errorMsg.classList.remove('show');
             successMsg.classList.remove('show');
             resultBox.classList.remove('show');
 
-            // Validation
+            // Validation - Both fields required
             if (!registrationId || !mobileNumber) {
                 errorMsg.textContent = '⚠️ Registration ID and Mobile Number are required!';
                 errorMsg.classList.add('show');
                 return;
             }
 
+            // Mobile number validation - 10 digits
             if (!/^\d{10}$/.test(mobileNumber)) {
                 errorMsg.textContent = '⚠️ Please enter a valid 10-digit mobile number!';
                 errorMsg.classList.add('show');
@@ -530,15 +578,15 @@
                 return;
             }
 
-            // Verify mobile number
+            // 🔑 VERIFY MOBILE NUMBER - Manual entry must match exactly
             if (student.contact !== mobileNumber) {
                 errorMsg.textContent = '❌ Mobile number does not match our records! Please check and try again.';
                 errorMsg.classList.add('show');
                 return;
             }
 
-            // Success - Show results
-            successMsg.textContent = '✅ Student verified! Displaying details...';
+            // ✅ SUCCESS - All verified
+            successMsg.textContent = '✅ Student verified successfully! Displaying details...';
             successMsg.classList.add('show');
 
             // Get WhatsApp groups
@@ -673,39 +721,6 @@
                 }
             }).join('');
         }
-
-        // =====================================================
-        // 🔄 AUTO-FILL ON REGISTRATION ID BLUR
-        // =====================================================
-        document.getElementById('registrationId').addEventListener('blur', function() {
-            const registrationId = this.value.trim();
-            const errorMsg = document.getElementById('errorMsg');
-            const successMsg = document.getElementById('successMsg');
-            
-            if (registrationId && STUDENT_DB[registrationId]) {
-                const student = STUDENT_DB[registrationId];
-                successMsg.textContent = 
-                    `✅ Student found: ${student.studentName} (${student.course})`;
-                successMsg.classList.add('show');
-                errorMsg.classList.remove('show');
-            } else if (registrationId) {
-                errorMsg.textContent = 
-                    '❌ Student not found with this Registration ID!';
-                errorMsg.classList.add('show');
-                successMsg.classList.remove('show');
-            }
-        });
-
-        // Auto-fill mobile on registration ID match
-        document.getElementById('registrationId').addEventListener('input', function() {
-            const registrationId = this.value.trim();
-            const mobileInput = document.getElementById('mobileNumber');
-            
-            if (registrationId && STUDENT_DB[registrationId]) {
-                const student = STUDENT_DB[registrationId];
-                mobileInput.value = student.contact || '';
-            }
-        });
     </script>
 </body>
 </html>
