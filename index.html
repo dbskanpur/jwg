@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student WhatsApp Group Joining System</title>
+    <title>Student WhatsApp Group Joining System - DBS PG College</title>
     <style>
         * {
             margin: 0;
@@ -19,7 +19,7 @@
         }
 
         .container {
-            max-width: 900px;
+            max-width: 950px;
             margin: 0 auto;
             background: white;
             border-radius: 20px;
@@ -27,17 +27,93 @@
             box-shadow: 0 20px 60px rgba(0,0,0,0.5);
         }
 
-        h1 {
+        /* ===== HEADER SECTION - PROFESSIONAL COLLEGE STYLE ===== */
+        .college-header {
+            text-align: center;
+            border-bottom: 3px solid #302b63;
+            padding-bottom: 20px;
+            margin-bottom: 20px;
+        }
+
+        .college-header .college-name {
+            font-size: 28px;
+            font-weight: 800;
+            color: #0f0c29;
+            letter-spacing: 1px;
+        }
+
+        .college-header .college-name span {
+            color: #302b63;
+        }
+
+        .college-header .college-location {
+            font-size: 14px;
+            color: #666;
+            font-weight: 500;
+            margin-top: 2px;
+        }
+
+        .college-header .college-divider {
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, #302b63, #0f0c29);
+            margin: 10px auto;
+            border-radius: 2px;
+        }
+
+        .college-header .principal-name {
+            font-size: 15px;
+            color: #444;
+            font-weight: 600;
+        }
+
+        .college-header .principal-name strong {
+            color: #0f0c29;
+        }
+
+        .college-header .development-info {
+            margin-top: 8px;
+            font-size: 13px;
+            color: #555;
+            background: #f0f0f5;
+            padding: 8px 20px;
+            border-radius: 8px;
+            display: inline-block;
+        }
+
+        .college-header .development-info strong {
+            color: #302b63;
+        }
+
+        .college-header .secretary-info {
+            margin-top: 6px;
+            font-size: 14px;
+            color: #444;
+            font-weight: 500;
+        }
+
+        .college-header .secretary-info strong {
+            color: #0f0c29;
+        }
+
+        .college-header .header-icon {
+            font-size: 32px;
+            margin-bottom: 5px;
+        }
+
+        /* ===== MAIN TITLE ===== */
+        .main-title {
             text-align: center;
             color: #0f0c29;
             margin-bottom: 5px;
-            font-size: 32px;
+            font-size: 28px;
+            font-weight: 700;
         }
 
         .subtitle {
             text-align: center;
             color: #666;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
             font-size: 14px;
         }
 
@@ -346,6 +422,16 @@
             display: block;
         }
 
+        /* ===== FOOTER ===== */
+        .footer {
+            text-align: center;
+            margin-top: 25px;
+            padding-top: 15px;
+            border-top: 2px solid #e0e0e0;
+            font-size: 12px;
+            color: #999;
+        }
+
         @media (max-width: 768px) {
             .row {
                 grid-template-columns: 1fr;
@@ -362,13 +448,42 @@
             .student-card .detail-row {
                 grid-template-columns: 1fr;
             }
+
+            .college-header .college-name {
+                font-size: 20px;
+            }
+
+            .college-header .development-info {
+                font-size: 11px;
+                padding: 6px 12px;
+            }
+
+            .main-title {
+                font-size: 22px;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>🎓 Student WhatsApp Group Joining System</h1>
-        <p class="subtitle">B.A. | B.Sc. | M.A. | M.Sc. - Find your WhatsApp Groups</p>
+        <!-- ===== PROFESSIONAL COLLEGE HEADER ===== -->
+        <div class="college-header">
+            <div class="header-icon">🏛️</div>
+            <div class="college-name">DBS PG College <span>Govind Nagar</span></div>
+            <div class="college-location">📍 Kanpur, Uttar Pradesh</div>
+            <div class="college-divider"></div>
+            <div class="principal-name">👨‍🏫 Principal: <strong>Prof. Anil Kumar Mishra</strong></div>
+            <div class="secretary-info">📋 Secretary: <strong>Meghana Swaroop</strong></div>
+            <div class="development-info">
+                💻 Developed by: <strong>Dr. Ashish Kumar Shukla</strong> 
+                <span style="color: #888; margin: 0 5px;">|</span> 
+                Assistant Professor, DBS PG College, Kanpur
+            </div>
+        </div>
+
+        <!-- ===== MAIN CONTENT ===== -->
+        <h1 class="main-title">🎓 Student WhatsApp Group Joining System</h1>
+        <p class="subtitle">B.A. | B.Sc. | M.A. | M.Sc. — Find your WhatsApp Groups</p>
         
         <div id="loadingMsg" class="loading">
             <div class="spinner"></div>
@@ -406,6 +521,11 @@
                 <strong style="color: #f8f8f2;">📄 Generated JSON Data</strong>
                 <pre id="jsonOutput"></pre>
             </div>
+        </div>
+
+        <!-- ===== FOOTER ===== -->
+        <div class="footer">
+            &copy; 2026 DBS PG College, Govind Nagar, Kanpur | All Rights Reserved
         </div>
     </div>
 
@@ -464,18 +584,16 @@
         // =====================================================
         function getWhatsAppGroups(student) {
             const groups = [];
-            const course = student.course; // B.A., B.Sc., M.A., M.Sc.
+            const course = student.course;
             const major1 = student.major1;
             const major2 = student.major2;
 
-            // Get groups from JSON structure - using whatsappGroups key
             const courseGroups = WHATSAPP_LINKS.whatsappGroups ? WHATSAPP_LINKS.whatsappGroups[course] : null;
             
             if (!courseGroups) {
                 return groups;
             }
 
-            // Add Major 1 Subject Group
             if (major1) {
                 const link = courseGroups[major1] || '';
                 groups.push({
@@ -487,7 +605,6 @@
                 });
             }
 
-            // Add Major 2 Subject Group (only for B.A. and B.Sc.)
             if ((course === 'B.A.' || course === 'B.Sc.') && major2 && major2.trim() !== '') {
                 const link = courseGroups[major2] || '';
                 groups.push({
@@ -503,20 +620,22 @@
         }
 
         // =====================================================
-        // 🔍 CHECK STUDENT ON REGISTRATION ID BLUR (Only Show Name)
+        // 🔍 CHECK STUDENT ON REGISTRATION ID BLUR
         // =====================================================
         document.getElementById('registrationId').addEventListener('blur', function() {
             const registrationId = this.value.trim();
             const foundMsg = document.getElementById('studentFoundMsg');
             const errorMsg = document.getElementById('errorMsg');
             
-            // Clear previous messages
             foundMsg.classList.remove('show');
             errorMsg.classList.remove('show');
             
             if (registrationId && STUDENT_DB[registrationId]) {
                 const student = STUDENT_DB[registrationId];
                 foundMsg.textContent = `✅ Student found: ${student.studentName} (${student.course})`;
+                foundMsg.style.color = '#28a745';
+                foundMsg.style.background = '#e8f5e9';
+                foundMsg.style.borderLeftColor = '#28a745';
                 foundMsg.classList.add('show');
             } else if (registrationId) {
                 foundMsg.textContent = '❌ Student not found with this Registration ID!';
@@ -527,7 +646,6 @@
             }
         });
 
-        // Reset found message style on new input
         document.getElementById('registrationId').addEventListener('input', function() {
             const foundMsg = document.getElementById('studentFoundMsg');
             foundMsg.classList.remove('show');
@@ -548,28 +666,23 @@
             const errorMsg = document.getElementById('errorMsg');
             const successMsg = document.getElementById('successMsg');
             const resultBox = document.getElementById('resultBox');
-            const foundMsg = document.getElementById('studentFoundMsg');
 
-            // Hide previous messages
             errorMsg.classList.remove('show');
             successMsg.classList.remove('show');
             resultBox.classList.remove('show');
 
-            // Validation - Both fields required
             if (!registrationId || !mobileNumber) {
                 errorMsg.textContent = '⚠️ Registration ID and Mobile Number are required!';
                 errorMsg.classList.add('show');
                 return;
             }
 
-            // Mobile number validation - 10 digits
             if (!/^\d{10}$/.test(mobileNumber)) {
                 errorMsg.textContent = '⚠️ Please enter a valid 10-digit mobile number!';
                 errorMsg.classList.add('show');
                 return;
             }
 
-            // Check student in database
             const student = STUDENT_DB[registrationId];
             
             if (!student) {
@@ -578,21 +691,17 @@
                 return;
             }
 
-            // 🔑 VERIFY MOBILE NUMBER - Manual entry must match exactly
             if (student.contact !== mobileNumber) {
                 errorMsg.textContent = '❌ Mobile number does not match our records! Please check and try again.';
                 errorMsg.classList.add('show');
                 return;
             }
 
-            // ✅ SUCCESS - All verified
             successMsg.textContent = '✅ Student verified successfully! Displaying details...';
             successMsg.classList.add('show');
 
-            // Get WhatsApp groups
             const groups = getWhatsAppGroups(student);
 
-            // Prepare JSON data
             const jsonData = {
                 student: {
                     registrationId: registrationId,
@@ -613,16 +722,10 @@
                 timestamp: new Date().toISOString()
             };
 
-            // Display student details
             displayStudentDetails(student, registrationId, mobileNumber);
-            
-            // Display WhatsApp links
             displayWhatsAppLinks(groups);
-            
-            // Display JSON
             document.getElementById('jsonOutput').textContent = JSON.stringify(jsonData, null, 2);
             
-            // Show result box
             resultBox.classList.add('show');
             resultBox.scrollIntoView({ behavior: 'smooth', block: 'start' });
         });
@@ -633,13 +736,11 @@
         function displayStudentDetails(student, registrationId, mobileNumber) {
             const card = document.getElementById('studentCard');
             
-            // Determine if UG or PG
             const isUG = student.course === 'B.A.' || student.course === 'B.Sc.';
             const courseBadge = isUG ? 
                 '<span class="course-badge course-ug">UG</span>' : 
                 '<span class="course-badge course-pg">PG</span>';
 
-            // Show major2 only if it exists and course is UG
             const major2Display = (isUG && student.major2 && student.major2.trim() !== '') 
                 ? student.major2 
                 : 'None';
