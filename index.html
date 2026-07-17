@@ -692,11 +692,13 @@
             }
 
             if (student.contact !== mobileNumber) {
-                errorMsg.textContent = '❌ Mobile number does not match our records! Please check and try again.';
-                errorMsg.classList.add('show');
-                return;
-            }
-
+          errorMsg.innerHTML = `
+            <div style="margin-bottom: 5px;">❌ Mobile number does not match our records! Please check and try again.</div>
+            <div style="font-size: 13px; color: #721c24;">📞 For more information, contact Admission Incharge Lt. (Dr.) Ajay Kumar at <strong>9005176886</strong></div>
+        `;
+        errorMsg.classList.add('show');
+        return;
+    }
             successMsg.textContent = '✅ Student verified successfully! Displaying details...';
             successMsg.classList.add('show');
 
